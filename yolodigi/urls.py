@@ -14,15 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-
+import os.path
 from django.conf.urls import include, url
 from django.contrib import admin
 from blog.views import *
 from django.conf import settings
+from yolodigi.views import *
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^contact/$', contact, name="contact"),
     url(r'', include('blog.urls')),
 
 	]

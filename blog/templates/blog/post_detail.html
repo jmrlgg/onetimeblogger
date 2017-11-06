@@ -1,0 +1,74 @@
+
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% block content %}
+<!-- Page Header -->
+    <header class="masthead" style="background-image: {% static 'img/post-bg.jpg' %}">
+    <div class="overlay"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="post-heading">
+              <h1>{{ post.title }}</h1>
+              <h2 class="subheading"> {{ post.heading }} </h2>
+              <span class="meta">Posted by
+                <a href="#">{{ post.author }}</a>
+                {% if post.published_date %}
+                  <div class="date">
+                    on {{ post.published_date }}
+                  
+                {% else %}
+                    on  {{ post.created_date }}
+                {% endif %}
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-md-10 mx-auto">
+            {% if user.is_authenticated %}
+            <a href="{% url 'post_edit' pk=post.pk %}">
+                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">Edit
+                </button>
+            </a>
+            <blockquote>{{ post.tags.names }}</blockquote>
+              
+            {% endif %}
+            {% autoescape off %}
+              {{ post.text|linebreaksbr }}
+            {% endautoescape %}
+            <hr width="50%">
+            <div class="comment small">
+            <div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-numposts="5">
+            </div>
+             <div class="pagination" >
+                <span class="step-links mx-auto">
+                    {% if object_list.has_previous %}
+                        <a class="btn btn-primary" href="?{{ page_request_var }}={{ object_list.previous_page_number }}">Previous</a>
+                    {% endif %}
+
+                    <strong class="current text-center">
+
+                        Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+                    </strong>
+
+                    {% if object_list.has_next %}
+                        <a class="btn btn-primary" href="?{{ page_request_var }}={{ object_list.next_page_number }}">Next</a>
+                    {% endif %}
+                </span>
+
+            </div> 
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <hr>
+{% endblock %}
