@@ -24,7 +24,7 @@ def home(request):
     return render(request, 'blog/index.html')
 
 def display_meta(request):
-    values = request.META   
+    values = request.META
     html = []
     for k in sorted(values):
         html.append('<tr><td>%s</td><td>%s</td></tr>' % (k, values[k]))
@@ -49,18 +49,18 @@ def contact(request):
     """Contact View for users to be able to communicate with us."""
 
     if request.method == 'POST':
-		form = ContactForm(request.POST)
-		if form.is_valid():
-			cd = form.cleaned_data
-			con = get_connection('django.core.mail.backends.console.EmailBackend')
-			send_mail(
-				cd['subject'],
-				cd['message'],
-				cd.get('email', 'noreply@example.com'),
-				['siteowner@example.com'],
-				connection=con                
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            con = get_connection('django.core.mail.backends.console.EmailBackend')
+            send_mail(
+                cd['subject'],
+                cd['message'],
+                cd.get('email', 'noreply@example.com'),
+                ['siteowner@example.com'],
+                connection=con
             )
-			return HttpResponseRedirect('/contact/thanks/')
+            return HttpResponseRedirect('/contact/thanks/')
     else:
         form = ContactForm(initial={'subject': 'I love your site!'})
 
@@ -68,12 +68,12 @@ def contact(request):
 
 
 def blog_post(request):
-	
-	# posts = map(str, Post.objects.filter(published_date__lte=timezone.now().order_by('published_date'))
-    
+
+    # posts = map(str, Post.objects.filter(published_date__lte=timezone.now().order_by('published_date'))
+
     post_list = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
     paginator = Paginator(post_list, 7) # Show 25 contacts per page
-    page_request_var = "abc"
+    page_request_var = 'abc'
     page = request.GET.get('page_request_var')
     try:
         queryset = paginator.page(page)
@@ -84,23 +84,30 @@ def blog_post(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         queryset = paginator.page(paginator.num_pages)
     context = {
-    	"object_list": queryset,
-    	"title": "List",
-    	"page_request_var": page_request_var
+        "object_list": queryset,
+        "title": "List",
+        "page_request_var": page_request_var
 
     }
     return render(request, 'blog/post_list.html', context)
 
 
+
 def post_detail(request, pk):
-	"""Post from blog being displayed as a whole on a clean slate."""
-	post = get_object_or_404(Post, pk=pk)
-	return render(request, 'blog/post_detail.html', {'post': post})
+    """Post from blog being displayed as a whole on a clean slate."""
+    instance = get_object_or_404(Post, pk=pk)
+    context = {
+        "title": instance.title,
+        "instance": instance
+    }
+    post = get_object_or_404(Post, pk=pk)
+
+    return render(request, 'blog/post_detail.html', {'post': post})
 
 
 def post_edit(request, pk):
     """Gives admin or Staff ability to edit a post from the post detail page."""
-    
+
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)
@@ -111,7 +118,7 @@ def post_edit(request, pk):
             return HttpResponseRedirect('post_detail.html', pk=post.pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'blog/post_edit.html', {'form': form})
+        return render(request, 'blog/post_edit.html', {'form': form})
 
 
 # def search(request):

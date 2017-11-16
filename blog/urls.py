@@ -6,6 +6,10 @@ Amazing."""
 import os.path
 from django.conf.urls import url
 from . import views
+from .views import (
+	blog_post,
+	post_detail,
+)
 
 from django.conf import settings
 from django.contrib import admin
@@ -20,8 +24,8 @@ urlpatterns = [
 	url(r'^login/', admin.site.urls),
 	url(r'^$', views.blog_post, name='home'),
 	url(r'^search/$', views.search, name="search"),
-	url(r'^post/(?P<pk>\d+)/$', views.post_detail, name='post_detail'),  # Post in-view ( view just one post post/<1 2 3 4>/ Than gives you the choice to edit if logged_in )
-    url(r'^(?P<pk>\d+)/edit/$', views.post_edit, name='post_edit'),  # Post edit ( view and edit just one post [ post/<1 2 3 4>/ ] )
+	url(r'^post/(?P<pk>\d+)$', post_detail, name='post_detail'),  # Post in-view ( view just one post post/<1 2 3 4>/ Than gives you the choice to edit if logged_in )
+    url(r'^edit/(?P<pk>\d+)/$', views.post_edit, name='post_edit'),  # Post edit ( view and edit just one post [ post/<1 2 3 4>/ ] )
 ]
 
 

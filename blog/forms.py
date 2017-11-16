@@ -22,7 +22,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         exclude = ['author', 'created_date']
-        fields = ('title', 'published_date', 'text')
+        fields = ['title', 'published_date', 'text']
 
 # class CommentForm(forms.ModelForm):
 

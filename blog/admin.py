@@ -2,25 +2,22 @@
 """Admin."""
 
 from __future__ import unicode_literals
-
+from django.db import models
 from django.contrib import admin
-from .models import *
+from .models import Post
 
 
+class PostModelAdmin(admin.ModelAdmin):
+    """Admin Configurations for Staff to Create new Post."""
 
-admin.site.register(Post)
-class PostAdmin(admin.ModelAdmin):
-	prepopulated_fields = {"slug": ("title",)}
-	list_display = ('title', 'author', 'created_date')
-	search_fields = ('title', 'author', 'created_date', 'tags')
-	ordering = ('-created_date', '-published_date')
-	save_as = True
+    list_display = ['title', 'heading', 'created_date', 'published_date']
+    list_editable = ['heading']
+    search_fields = ['title', 'created_date']
+    ordering = ['-created_date', '-published_date']
+    save_as = True
 
-	def get_queryset(self, request):
-		return super(PostAdmin, self).get_queryset(request).prefetch_related('tags')
-
-	def tag_list(self, obj):
-		return u", ".join(o.name for o in obj.tags.all())
+    class Meta:
+        models = Post
 
 
-
+admin.site.register(Post, PostModelAdmin)
