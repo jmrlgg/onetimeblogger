@@ -16,7 +16,6 @@ Including another URLconf
 
 import os.path
 from django.conf.urls import include, url
-from django.conf.urls.static import static
 from django.contrib import admin
 from blog.views import *
 from django.conf import settings
@@ -27,7 +26,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^contact/$', contact, name="contact"),
     url(r'', include('blog.urls')),
-    url(r'^users/', include('users.urls', namespace='users')),
 
 	]
 

@@ -108,8 +108,3 @@ db.sqlite3
 -
 -# mypy
 -.mypy_cache/
-blog/migrations/
-
-accounts/migrations/
-
-\.vscode/
