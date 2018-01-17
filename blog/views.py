@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 import datetime
-from blog.forms import ContactForm, PostForm
+from .forms import ContactForm, PostForm
 from django.core.mail import send_mail, get_connection
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Permission, User
@@ -15,6 +15,7 @@ from taggit.models import Tag
 from django.http import HttpResponse
 from django.views.generic import DetailView, ListView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 
 
 # Create your views here.
@@ -72,9 +73,9 @@ def blog_post(request):
     # posts = map(str, Post.objects.filter(published_date__lte=timezone.now().order_by('published_date'))
 
     post_list = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-    paginator = Paginator(post_list, 7) # Show 25 contacts per page
-    page_request_var = 'abc'
-    page = request.GET.get('page_request_var')
+    paginator = Paginator(post_list, 4) # Show 25 contacts per page
+    page_request_var = 'page'
+    page = request.GET.get('page')
     try:
         queryset = paginator.page(page)
     except PageNotAnInteger:
@@ -92,33 +93,48 @@ def blog_post(request):
     return render(request, 'blog/post_list.html', context)
 
 
+def post_create(request):
+    form = PostForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request, 'Post Added.')
+        return HttpResponseRedirect(instance.get_absolute_url())
+    context = {
+        "form": form,
+    }
+    return render(request, "blog/post_form.html", context)
+    
 
 def post_detail(request, pk):
     """Post from blog being displayed as a whole on a clean slate."""
-    instance = get_object_or_404(Post, pk=pk)
-    context = {
-        "title": instance.title,
-        "instance": instance
-    }
     post = get_object_or_404(Post, pk=pk)
+    context = {
+        "post": post,
+        "title": post.title
+    }
+    
 
-    return render(request, 'blog/post_detail.html', {'post': post})
+    return render(request, 'blog/post_detail.html', context)
 
 
 def post_edit(request, pk):
     """Gives admin or Staff ability to edit a post from the post detail page."""
 
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.up_date = datetime.datetime.now()
-            post.save()
-            return HttpResponseRedirect('post_detail.html', pk=post.pk)
-    else:
-        form = PostForm(instance=post)
-        return render(request, 'blog/post_edit.html', {'form': form})
+    instance = get_object_or_404(Post, pk=pk)
+    form = PostForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.published_date = datetime.datetime.now()
+        instance.save()
+        messages.success(request, 'Post Saved.')
+        return HttpResponseRedirect(instance.get_absolute_url())
+
+    context = {
+        "instance": instance,
+        "form":form,
+    }
+    return render(request, 'blog/post_form.html', context)
 
 
 # def search(request):

@@ -11,7 +11,8 @@ class Post(models.Model):
     heading = models.CharField(max_length=255)
     text = models.TextField()
     created_date = models.DateTimeField(auto_now=False, auto_now_add=True)
-    published_date = models.DateTimeField()
+    published_date = models.DateTimeField(blank=True, null=True)
+    article_img = models.ImageField(upload_to = 'article_imgs/', default = 'article_imgs/no-img.jpg')
 
     def __str__(self):
         return self.title

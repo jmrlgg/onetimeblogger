@@ -1,7 +1,10 @@
 {% extends 'index.html' %}
-	{{ context }}
+
+{% block content %}
+
 	<h3>Admin Panel for Blog Entries</h3>
-	<form method="POST" action='' class="post-form">{% csrf_token %}
-			{{ context.form.as_p }}
+	<form class="post-form" method="POST" action='' >{% csrf_token %}
+			{{ form.as_p }}
 			<button type="submit" class="save btn btn-default">Save</button>
 	</form>
+{% endblock %}

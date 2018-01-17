@@ -59,7 +59,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'static')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -137,6 +136,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = '/home/pi/yolodigi/static/'
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+# ]
 
 
 # Media files ( images, files etc.. that have been uploaded by users)
